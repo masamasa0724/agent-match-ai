@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Agent Match AI</title>
+
+<style>
+body{
+    margin:0;
+    font-family:Arial,sans-serif;
+    background:#f4f8ff;
+}
+
+.container{
+    max-width:700px;
+    margin:50px auto;
+    background:white;
+    padding:30px;
+    border-radius:15px;
+    box-shadow:0 5px 20px rgba(0,0,0,.15);
+}
+
+h1{
+    text-align:center;
+    color:#1565c0;
+}
+
+p{
+    text-align:center;
+}
+
+.question{
+    margin-top:25px;
+}
+
+select{
+    width:100%;
+    padding:10px;
+    border-radius:8px;
+    font-size:16px;
+}
+
+button{
+    margin-top:30px;
+    width:100%;
+    padding:15px;
+    font-size:18px;
+    background:#1565c0;
+    color:white;
+    border:none;
+    border-radius:10px;
+    cursor:pointer;
+}
+
+button:hover{
+    background:#0d47a1;
+}
+
+#result{
+    margin-top:30px;
+    font-size:20px;
+    font-weight:bold;
+    text-align:center;
+}
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>🤖 Agent Match AI</h1>
+
+<p>あなたに最適な転職エージェントを診断します</p>
+
+<div class="question">
+年齢
+
+<select id="age">
+<option>20代</option>
+<option>30代</option>
+<option>40代以上</option>
+</select>
+
+</div>
+
+<div class="question">
+
+障害者雇用を希望しますか？
+
+<select id="disability">
+<option>はい</option>
+<option>いいえ</option>
+</select>
+
+</div>
+
+<button onclick="diagnose()">
+診断する
+</button>
+
+<div id="result"></div>
+
+</div>
+
+<script>
+
+function diagnose(){
+
+const disability=document.getElementById("disability").value;
+
+let html="";
+
+if(disability=="はい"){
+
+html=`
+🥇 dodaチャレンジ<br><br>
+相性 96点<br><br>
+障害者雇用に強く、
+長期就業支援が充実しています。
+`;
+
+}else{
+
+html=`
+🥇 リクルートエージェント<br><br>
+相性 91点<br><br>
+求人数が多く、
+幅広い職種に対応しています。
+`;
+
+}
+
+document.getElementById("result").innerHTML=html;
+
+}
+
+</script>
+
+</body>
+
+</html>
