@@ -3,68 +3,58 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Agent Match AI</title>
+<title>Agent Match AI Ver.2</title>
 
 <style>
 body{
+    font-family: Arial, sans-serif;
+    background:#eef5ff;
     margin:0;
-    font-family:Arial,sans-serif;
-    background:#f4f8ff;
 }
-
 .container{
     max-width:700px;
-    margin:50px auto;
+    margin:40px auto;
     background:white;
     padding:30px;
     border-radius:15px;
-    box-shadow:0 5px 20px rgba(0,0,0,.15);
+    box-shadow:0 5px 15px rgba(0,0,0,.15);
 }
-
 h1{
-    text-align:center;
     color:#1565c0;
-}
-
-p{
     text-align:center;
 }
-
 .question{
-    margin-top:25px;
+    margin:20px 0;
 }
-
 select{
     width:100%;
     padding:10px;
-    border-radius:8px;
     font-size:16px;
 }
-
 button{
-    margin-top:30px;
     width:100%;
     padding:15px;
-    font-size:18px;
     background:#1565c0;
     color:white;
     border:none;
     border-radius:10px;
+    font-size:18px;
     cursor:pointer;
 }
-
 button:hover{
     background:#0d47a1;
 }
-
-#result{
-    margin-top:30px;
+.card{
+    margin-top:25px;
+    background:#f7fbff;
+    padding:20px;
+    border-radius:10px;
+}
+.rank{
     font-size:20px;
-    font-weight:bold;
-    text-align:center;
+    margin-bottom:10px;
 }
 </style>
-
 </head>
 
 <body>
@@ -73,72 +63,92 @@ button:hover{
 
 <h1>🤖 Agent Match AI</h1>
 
-<p>あなたに最適な転職エージェントを診断します</p>
+<p>3分であなたに合う転職エージェントを診断します。</p>
 
 <div class="question">
-年齢
-
-<select id="age">
-<option>20代</option>
-<option>30代</option>
-<option>40代以上</option>
-</select>
-
-</div>
-
-<div class="question">
-
-障害者雇用を希望しますか？
-
+<label>障害者雇用を希望しますか？</label>
 <select id="disability">
-<option>はい</option>
-<option>いいえ</option>
+<option value="yes">はい</option>
+<option value="no">いいえ</option>
 </select>
-
 </div>
 
-<button onclick="diagnose()">
-診断する
-</button>
+<div class="question">
+<label>職種</label>
+<select id="job">
+<option value="office">事務</option>
+<option value="engineer">技術・品質保証</option>
+<option value="it">IT</option>
+</select>
+</div>
+
+<button onclick="diagnose()">診断する</button>
 
 <div id="result"></div>
 
 </div>
 
 <script>
-
 function diagnose(){
 
 const disability=document.getElementById("disability").value;
+const job=document.getElementById("job").value;
 
-let html="";
+let result="";
 
-if(disability=="はい"){
+if(disability==="yes"){
+result=`
+<div class="card">
+<div class="rank">🥇 dodaチャレンジ（96点）</div>
+<p>障害者雇用に強く、面接対策や定着支援が充実しています。</p>
 
-html=`
-🥇 dodaチャレンジ<br><br>
-相性 96点<br><br>
-障害者雇用に強く、
-長期就業支援が充実しています。
+<div class="rank">🥈 LITALICO仕事ナビ（92点）</div>
+<p>一人ひとりに合わせた求人紹介が特徴です。</p>
+
+<div class="rank">🥉 マイナビパートナーズ紹介（89点）</div>
+<p>長期就業を重視する方におすすめです。</p>
+</div>
+`;
+}else{
+
+if(job==="engineer"){
+
+result=`
+<div class="card">
+<div class="rank">🥇 リクルートエージェント（94点）</div>
+<p>技術職・品質保証の求人が豊富です。</p>
+
+<div class="rank">🥈 ワークポート（90点）</div>
+<p>技術系・IT系に強いエージェントです。</p>
+
+<div class="rank">🥉 doda（88点）</div>
+<p>幅広い求人を扱っています。</p>
+</div>
 `;
 
 }else{
 
-html=`
-🥇 リクルートエージェント<br><br>
-相性 91点<br><br>
-求人数が多く、
-幅広い職種に対応しています。
+result=`
+<div class="card">
+<div class="rank">🥇 doda（92点）</div>
+<p>幅広い職種に対応しています。</p>
+
+<div class="rank">🥈 リクルートエージェント（90点）</div>
+<p>業界最大級の求人数があります。</p>
+
+<div class="rank">🥉 マイナビエージェント（88点）</div>
+<p>20〜30代の転職支援に強みがあります。</p>
+</div>
 `;
 
 }
 
-document.getElementById("result").innerHTML=html;
-
 }
 
+document.getElementById("result").innerHTML=result;
+
+}
 </script>
 
 </body>
-
 </html>
