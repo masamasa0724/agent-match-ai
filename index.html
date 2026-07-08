@@ -79,6 +79,12 @@ button:hover{
 <option value="office">事務</option>
 <option value="engineer">技術・品質保証</option>
 <option value="it">IT</option>
+<option value="sales">営業</option>
+<option value="marketing">マーケティング</option>
+<option value="design">デザイン・クリエイティブ</option>
+<option value="consulting">コンサルティング</option>
+<option value="medical">医療・福祉</option>
+<option value="construction">建設・施工管理</option>
 </select>
 </div>
 
@@ -132,6 +138,159 @@ result=`
 
 <div class="rank">🥉 doda（88点）</div>
 <p>幅広い求人を扱っています。</p>
+
+<div class="rank">🏅 JACリクルートメント（86点）</div>
+<p>ハイキャリア向けの技術職求人が豊富です。</p>
+
+<div class="rank">🏅 Spring転職エージェント（84点）</div>
+<p>グローバル企業のエンジニア求人に強いです。</p>
+</div>
+`;
+
+}else if(job==="it"){
+
+result=`
+<div class="card">
+<div class="rank">🥇 ワークポート（92点）</div>
+<p>IT業界に特化、未経験者にも親切です。</p>
+
+<div class="rank">🥈 リクルートエージェント（90点）</div>
+<p>IT求人数が業界最大級です。</p>
+
+<div class="rank">🥉 doda（88点）</div>
+<p>幅広いIT職種に対応しています。</p>
+
+<div class="rank">🏅 マイナビIT AGENT（86点）</div>
+<p>20〜30代のIT転職に強みがあります。</p>
+
+<div class="rank">🏅 レバテックキャリア（84点）</div>
+<p>エンジニア特化、高単価案件が豊富です。</p>
+</div>
+`;
+
+}else if(job==="sales"){
+
+result=`
+<div class="card">
+<div class="rank">🥇 doda（92点）</div>
+<p>営業職の求人が豊富で、業界知識が充実しています。</p>
+
+<div class="rank">🥈 リクルートエージェント（90点）</div>
+<p>営業職向けの大手企業求人が多数あります。</p>
+
+<div class="rank">🥉 hulu（88点）</div>
+<p>営業系の転職支援に特化しています。</p>
+
+<div class="rank">🏅 type転職エージェント（86点）</div>
+<p>営業職のキャリアアップに強みがあります。</p>
+
+<div class="rank">🏅 JACリクルートメント（84点）</div>
+<p>高年収営業職の案件が豊富です。</p>
+</div>
+`;
+
+}else if(job==="marketing"){
+
+result=`
+<div class="card">
+<div class="rank">🥇 リクルートエージェント（92点）</div>
+<p>マーケティング職の大手求人が充実しています。</p>
+
+<div class="rank">🥈 doda（90点）</div>
+<p>マーケティング職向けの幅広い案件があります。</p>
+
+<div class="rank">🥉 type転職エージェント（88点）</div>
+<p>マーケティング職のキャリア支援に特化しています。</p>
+
+<div class="rank">🏅 JACリクルートメント（86点）</div>
+<p>外資系のマーケティング職に強みがあります。</p>
+
+<div class="rank">🏅 Spring転職エージェント（84点）</div>
+<p>グローバル企業のマーケティング求人が豊富です。</p>
+</div>
+`;
+
+}else if(job==="design"){
+
+result=`
+<div class="card">
+<div class="rank">🥇 マイナビクリエイター（92点）</div>
+<p>デザイナー・クリエイター職に特化しています。</p>
+
+<div class="rank">🥈 doda（90点）</div>
+<p>デザイン職の求人数が豊富です。</p>
+
+<div class="rank">🥉 リクルートエージェント（88点）</div>
+<p>大手企業のデザイン職求人があります。</p>
+
+<div class="rank">🏅 レバテッククリエイター（86点）</div>
+<p>クリエイター向けの高単価案件が豊富です。</p>
+
+<div class="rank">🏅 ウズカレ（84点）</div>
+<p>未経験からのデザイン職転職もサポートしています。</p>
+</div>
+`;
+
+}else if(job==="consulting"){
+
+result=`
+<div class="card">
+<div class="rank">🥇 JACリクルートメント（94点）</div>
+<p>コンサルティングファーム求人に最も強いです。</p>
+
+<div class="rank">🥈 リクルートエージェント（91点）</div>
+<p>大手コンサルティング企業の求人が豊富です。</p>
+
+<div class="rank">🥉 doda（89点）</div>
+<p>コンサルティング職の幅広い案件があります。</p>
+
+<div class="rank">🏅 Spring転職エージェント（87点）</div>
+<p>外資系コンサルティングに強みがあります。</p>
+
+<div class="rank">🏅 アクシスコンサルティング（85点）</div>
+<p>コンサルティング業界専門の高度な支援が特徴です。</p>
+</div>
+`;
+
+}else if(job==="medical"){
+
+result=`
+<div class="card">
+<div class="rank">🥇 医療ワーカー（93点）</div>
+<p>医療・福祉業界に特化、求人が充実しています。</p>
+
+<div class="rank">🥈 ナース人材バンク（91点）</div>
+<p>看護職向けの大手求人があります。</p>
+
+<div class="rank">🥉 リクルートエージェント（88点）</div>
+<p>医療・福祉職の幅広い求人を扱っています。</p>
+
+<div class="rank">🏅 doda（86点）</div>
+<p>医療・福祉職向けの多様な案件があります。</p>
+
+<div class="rank">🏅 マイナビコメディカル（84点）</div>
+<p>リハビリ・検査技師など専門職に強みがあります。</p>
+</div>
+`;
+
+}else if(job==="construction"){
+
+result=`
+<div class="card">
+<div class="rank">🥇 セコカンNEXT（93点）</div>
+<p>建設・施工管理職に特化した最大級のサイトです。</p>
+
+<div class="rank">🥈 doda（90点）</div>
+<p>建設業界の求人数が豊富です。</p>
+
+<div class="rank">🥉 リクルートエージェント（88点）</div>
+<p>大手建設企業の求人があります。</p>
+
+<div class="rank">🏅 建設・設備求人データベース（86点）</div>
+<p>施工管理技士向けの専門求人が充実しています。</p>
+
+<div class="rank">🏅 ハタラクティブ（84点）</div>
+<p>未経験からの建設職就職もサポートしています。</p>
 </div>
 `;
 
@@ -147,6 +306,12 @@ result=`
 
 <div class="rank">🥉 マイナビエージェント（88点）</div>
 <p>20〜30代の転職支援に強みがあります。</p>
+
+<div class="rank">🏅 type転職エージェント（86点）</div>
+<p>事務職のキャリアアップに特化しています。</p>
+
+<div class="rank">🏅 パソナキャリア（84点）</div>
+<p>事務職の研修・サポート体制が充実しています。</p>
 </div>
 `;
 
