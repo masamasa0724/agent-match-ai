@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Agent Match AI Ver.2</title>
+<title>Agent Match AI Ver.3</title>
 
 <style>
 body{
@@ -23,26 +23,58 @@ h1{
     color:#1565c0;
     text-align:center;
 }
+.progress{
+    width:100%;
+    height:8px;
+    background:#e0e0e0;
+    border-radius:10px;
+    margin-bottom:20px;
+    overflow:hidden;
+}
+.progress-bar{
+    height:100%;
+    background:#1565c0;
+    transition: width 0.3s;
+}
 .question{
     margin:20px 0;
+}
+label{
+    display:block;
+    margin-bottom:8px;
+    font-weight:bold;
+    color:#333;
 }
 select{
     width:100%;
     padding:10px;
     font-size:16px;
+    border:1px solid #ddd;
+    border-radius:5px;
+}
+.button-group{
+    display:flex;
+    gap:10px;
+    margin-top:20px;
 }
 button{
-    width:100%;
+    flex:1;
     padding:15px;
     background:#1565c0;
     color:white;
     border:none;
     border-radius:10px;
-    font-size:18px;
+    font-size:16px;
     cursor:pointer;
 }
 button:hover{
     background:#0d47a1;
+}
+.back-button{
+    background:#999;
+}
+.back-button:hover{
+    background:#666;
 }
 .card{
     margin-top:25px;
@@ -51,8 +83,17 @@ button:hover{
     border-radius:10px;
 }
 .rank{
-    font-size:20px;
-    margin-bottom:10px;
+    font-size:18px;
+    margin-bottom:8px;
+    font-weight:bold;
+    color:#1565c0;
+}
+.card p{
+    margin:5px 0;
+    font-size:14px;
+}
+.hidden{
+    display:none;
 }
 </style>
 </head>
@@ -61,21 +102,30 @@ button:hover{
 
 <div class="container">
 
-<h1>🤖 Agent Match AI</h1>
+<h1>🤖 Agent Match AI Ver.3</h1>
 
-<p>3分であなたに合う転職エージェントを診断します。</p>
+<div id="progressContainer" class="progress">
+    <div class="progress-bar" id="progressBar"></div>
+</div>
 
-<div class="question">
-<label>障害者雇用を希望しますか？</label>
+<!-- Step 1: 障害者雇用 -->
+<div id="step1" class="question">
+<label>1. 障害者雇用を希望しますか？</label>
 <select id="disability">
+<option value="">選択してください</option>
 <option value="yes">はい</option>
 <option value="no">いいえ</option>
 </select>
+<div class="button-group">
+    <button onclick="nextStep(1)">次へ</button>
+</div>
 </div>
 
-<div class="question">
-<label>職種</label>
+<!-- Step 2: 職種 -->
+<div id="step2" class="question hidden">
+<label>2. 職種を選択してください</label>
 <select id="job">
+<option value="">選択してください</option>
 <option value="office">事務</option>
 <option value="engineer">技術・品質保証</option>
 <option value="it">IT</option>
@@ -88,284 +138,363 @@ button:hover{
 <option value="hr">人事</option>
 <option value="general">総務</option>
 </select>
+<div class="button-group">
+    <button class="back-button" onclick="prevStep(2)">戻る</button>
+    <button onclick="nextStep(2)">次へ</button>
+</div>
 </div>
 
-<button onclick="diagnose()">診断する</button>
+<!-- Step 3: 年代 -->
+<div id="step3" class="question hidden">
+<label>3. 年代を選択してください</label>
+<select id="age">
+<option value="">選択してください</option>
+<option value="20s">20代</option>
+<option value="30s">30代</option>
+<option value="40s">40代</option>
+<option value="50s">50代以上</option>
+</select>
+<div class="button-group">
+    <button class="back-button" onclick="prevStep(3)">戻る</button>
+    <button onclick="nextStep(3)">次へ</button>
+</div>
+</div>
 
+<!-- Step 4: 経験年数 -->
+<div id="step4" class="question hidden">
+<label>4. 職務経歴を選択してください</label>
+<select id="experience">
+<option value="">選択してください</option>
+<option value="none">未経験</option>
+<option value="1-3">1-3年</option>
+<option value="3-5">3-5年</option>
+<option value="5plus">5年以上</option>
+</select>
+<div class="button-group">
+    <button class="back-button" onclick="prevStep(4)">戻る</button>
+    <button onclick="nextStep(4)">次へ</button>
+</div>
+</div>
+
+<!-- Step 5: 希望年収 -->
+<div id="step5" class="question hidden">
+<label>5. 希望年収を選択してください</label>
+<select id="salary">
+<option value="">選択してください</option>
+<option value="low">300万円未満</option>
+<option value="mid">300-500万円</option>
+<option value="high">500-700万円</option>
+<option value="very-high">700万円以上</option>
+</select>
+<div class="button-group">
+    <button class="back-button" onclick="prevStep(5)">戻る</button>
+    <button onclick="nextStep(5)">次へ</button>
+</div>
+</div>
+
+<!-- Step 6: 勤務地 -->
+<div id="step6" class="question hidden">
+<label>6. 勤務地の希望を選択してください</label>
+<select id="location">
+<option value="">選択してください</option>
+<option value="local">地元</option>
+<option value="tokyo">首都圏</option>
+<option value="national">全国</option>
+<option value="remote">リモート希望</option>
+</select>
+<div class="button-group">
+    <button class="back-button" onclick="prevStep(6)">戻る</button>
+    <button onclick="nextStep(6)">次へ</button>
+</div>
+</div>
+
+<!-- Step 7: 企業規模 -->
+<div id="step7" class="question hidden">
+<label>7. 希望する企業規模を選択してください</label>
+<select id="company-size">
+<option value="">選択してください</option>
+<option value="startup">スタートアップ</option>
+<option value="small">中小企業</option>
+<option value="large">大企業</option>
+<option value="foreign">外資系</option>
+</select>
+<div class="button-group">
+    <button class="back-button" onclick="prevStep(7)">戻る</button>
+    <button onclick="nextStep(7)">次へ</button>
+</div>
+</div>
+
+<!-- Step 8: 転職理由 -->
+<div id="step8" class="question hidden">
+<label>8. 転職理由を選択してください</label>
+<select id="reason">
+<option value="">選択してください</option>
+<option value="skill">スキルアップ</option>
+<option value="treatment">待遇改善</option>
+<option value="worklife">ワークライフバランス</option>
+<option value="career">キャリアチェンジ</option>
+</select>
+<div class="button-group">
+    <button class="back-button" onclick="prevStep(8)">戻る</button>
+    <button onclick="diagnose()">診断結果を見る</button>
+</div>
+</div>
+
+<!-- 結果表示 -->
 <div id="result"></div>
 
 </div>
 
 <script>
+let currentStep = 1;
+const totalSteps = 8;
+
+function updateProgress(){
+    const progress = (currentStep / totalSteps) * 100;
+    document.getElementById("progressBar").style.width = progress + "%";
+}
+
+function nextStep(step){
+    const stepIds = ["disability", "job", "age", "experience", "salary", "location", "company-size", "reason"];
+    const value = document.getElementById(stepIds[step-1]).value;
+    
+    if(!value){
+        alert("選択してください");
+        return;
+    }
+    
+    document.getElementById("step" + step).classList.add("hidden");
+    currentStep = step + 1;
+    document.getElementById("step" + currentStep).classList.remove("hidden");
+    updateProgress();
+}
+
+function prevStep(step){
+    document.getElementById("step" + step).classList.add("hidden");
+    currentStep = step - 1;
+    document.getElementById("step" + currentStep).classList.remove("hidden");
+    updateProgress();
+}
+
 function diagnose(){
-
-const disability=document.getElementById("disability").value;
-const job=document.getElementById("job").value;
-
-let result="";
-
-if(disability==="yes"){
-result=`
-<div class="card">
-<div class="rank">🥇 dodaチャレンジ（96点）</div>
-<p>障害者雇用に強く、面接対策や定着支援が充実しています。</p>
-
-<div class="rank">🥈 LITALICO仕事ナビ（92点）</div>
-<p>一人ひとりに合わせた求人紹介が特徴です。</p>
-
-<div class="rank">🥉 マイナビパートナーズ紹介（89点）</div>
-<p>長期就業を重視する方におすすめです。</p>
-
-<div class="rank">🏅 エージェント・サーナ（87点）</div>
-<p>障害者専門の老舗エージェント、業界知識が豊富です。</p>
-
-<div class="rank">🏅 ランスタッド（85点）</div>
-<p>グローバル企業の求人が豊富、外資系に強みがあります。</p>
-
-<div class="rank">🏅 atGPエージェント（84点）</div>
-<p>通勤が難しい方向けのリモート求人が充実しています。</p>
-</div>
-`;
-}else{
-
-if(job==="engineer"){
-
-result=`
-<div class="card">
-<div class="rank">🥇 リクルートエージェント（94点）</div>
-<p>技術職・品質保証の求人が豊富です。</p>
-
-<div class="rank">🥈 ワークポート（90点）</div>
-<p>技術系・IT系に強いエージェントです。</p>
-
-<div class="rank">🥉 doda（88点）</div>
-<p>幅広い求人を扱っています。</p>
-
-<div class="rank">🏅 JACリクルートメント（86点）</div>
-<p>ハイキャリア向けの技術職求人が豊富です。</p>
-
-<div class="rank">🏅 Spring転職エージェント（84点）</div>
-<p>グローバル企業のエンジニア求人に強いです。</p>
-</div>
-`;
-
-}else if(job==="it"){
-
-result=`
-<div class="card">
-<div class="rank">🥇 ワークポート（92点）</div>
-<p>IT業界に特化、未経験者にも親切です。</p>
-
-<div class="rank">🥈 リクルートエージェント（90点）</div>
-<p>IT求人数が業界最大級です。</p>
-
-<div class="rank">🥉 doda（88点）</div>
-<p>幅広いIT職種に対応しています。</p>
-
-<div class="rank">🏅 マイナビIT AGENT（86点）</div>
-<p>20〜30代のIT転職に強みがあります。</p>
-
-<div class="rank">🏅 レバテックキャリア（84点）</div>
-<p>エンジニア特化、高単価案件が豊富です。</p>
-</div>
-`;
-
-}else if(job==="sales"){
-
-result=`
-<div class="card">
-<div class="rank">🥇 doda（92点）</div>
-<p>営業職の求人が豊富で、業界知識が充実しています。</p>
-
-<div class="rank">🥈 リクルートエージェント（90点）</div>
-<p>営業職向けの大手企業求人が多数あります。</p>
-
-<div class="rank">🥉 hulu（88点）</div>
-<p>営業系の転職支援に特化しています。</p>
-
-<div class="rank">🏅 type転職エージェント（86点）</div>
-<p>営業職のキャリアアップに強みがあります。</p>
-
-<div class="rank">🏅 JACリクルートメント（84点）</div>
-<p>高年収営業職の案件が豊富です。</p>
-</div>
-`;
-
-}else if(job==="marketing"){
-
-result=`
-<div class="card">
-<div class="rank">🥇 リクルートエージェント（92点）</div>
-<p>マーケティング職の大手求人が充実しています。</p>
-
-<div class="rank">🥈 doda（90点）</div>
-<p>マーケティング職向けの幅広い案件があります。</p>
-
-<div class="rank">🥉 type転職エージェント（88点）</div>
-<p>マーケティング職のキャリア支援に特化しています。</p>
-
-<div class="rank">🏅 JACリクルートメント（86点）</div>
-<p>外資系のマーケティング職に強みがあります。</p>
-
-<div class="rank">🏅 Spring転職エージェント（84点）</div>
-<p>グローバル企業のマーケティング求人が豊富です。</p>
-</div>
-`;
-
-}else if(job==="design"){
-
-result=`
-<div class="card">
-<div class="rank">🥇 マイナビクリエイター（92点）</div>
-<p>デザイナー・クリエイター職に特化しています。</p>
-
-<div class="rank">🥈 doda（90点）</div>
-<p>デザイン職の求人数が豊富です。</p>
-
-<div class="rank">🥉 リクルートエージェント（88点）</div>
-<p>大手企業のデザイン職求人があります。</p>
-
-<div class="rank">🏅 レバテッククリエイター（86点）</div>
-<p>クリエイター向けの高単価案件が豊富です。</p>
-
-<div class="rank">🏅 ウズカレ（84点）</div>
-<p>未経験からのデザイン職転職もサポートしています。</p>
-</div>
-`;
-
-}else if(job==="consulting"){
-
-result=`
-<div class="card">
-<div class="rank">🥇 JACリクルートメント（94点）</div>
-<p>コンサルティングファーム求人に最も強いです。</p>
-
-<div class="rank">🥈 リクルートエージェント（91点）</div>
-<p>大手コンサルティング企業の求人が豊富です。</p>
-
-<div class="rank">🥉 doda（89点）</div>
-<p>コンサルティング職の幅広い案件があります。</p>
-
-<div class="rank">🏅 Spring転職エージェント（87点）</div>
-<p>外資系コンサルティングに強みがあります。</p>
-
-<div class="rank">🏅 アクシスコンサルティング（85点）</div>
-<p>コンサルティング業界専門の高度な支援が特徴です。</p>
-</div>
-`;
-
-}else if(job==="medical"){
-
-result=`
-<div class="card">
-<div class="rank">🥇 医療ワーカー（93点）</div>
-<p>医療・福祉業界に特化、求人が充実しています。</p>
-
-<div class="rank">🥈 ナース人材バンク（91点）</div>
-<p>看護職向けの大手求人があります。</p>
-
-<div class="rank">🥉 リクルートエージェント（88点）</div>
-<p>医療・福祉職の幅広い求人を扱っています。</p>
-
-<div class="rank">🏅 doda（86点）</div>
-<p>医療・福祉職向けの多様な案件があります。</p>
-
-<div class="rank">🏅 マイナビコメディカル（84点）</div>
-<p>リハビリ・検査技師など専門職に強みがあります。</p>
-</div>
-`;
-
-}else if(job==="construction"){
-
-result=`
-<div class="card">
-<div class="rank">🥇 セコカンNEXT（93点）</div>
-<p>建設・施工管理職に特化した最大級のサイトです。</p>
-
-<div class="rank">🥈 doda（90点）</div>
-<p>建設業界の求人数が豊富です。</p>
-
-<div class="rank">🥉 リクルートエージェント（88点）</div>
-<p>大手建設企業の求人があります。</p>
-
-<div class="rank">🏅 建設・設備求人データベース（86点）</div>
-<p>施工管理技士向けの専門求人が充実しています。</p>
-
-<div class="rank">🏅 ハタラクティブ（84点）</div>
-<p>未経験からの建設職就職もサポートしています。</p>
-</div>
-`;
-
-}else if(job==="hr"){
-
-result=`
-<div class="card">
-<div class="rank">🥇 リクルートエージェント（93点）</div>
-<p>人事職の大手企業求人が充実しています。</p>
-
-<div class="rank">🥈 doda（91点）</div>
-<p>人事職の幅広い案件があります。</p>
-
-<div class="rank">🥉 JACリクルートメント（89点）</div>
-<p>人事部長など経営層向け求人が豊富です。</p>
-
-<div class="rank">🏅 type転職エージェント（87点）</div>
-<p>人事職のキャリアアップに強みがあります。</p>
-
-<div class="rank">🏅 マイナビエージェント（85点）</div>
-<p>人事職の専門的なサポートが充実しています。</p>
-</div>
-`;
-
-}else if(job==="general"){
-
-result=`
-<div class="card">
-<div class="rank">🥇 doda（93点）</div>
-<p>総務職の幅広い求人があります。</p>
-
-<div class="rank">🥈 リクルートエージェント（91点）</div>
-<p>総務職の大手企業求人が充実しています。</p>
-
-<div class="rank">🥉 マイナビエージェント（89点）</div>
-<p>総務職のキャリア支援に特化しています。</p>
-
-<div class="rank">🏅 type転職エージェント（87点）</div>
-<p>総務職のスキルアップをサポートしています。</p>
-
-<div class="rank">🏅 パソナキャリア（85点）</div>
-<p>総務職の研修・サポート体制が充実しています。</p>
-</div>
-`;
-
-}else{
-
-result=`
-<div class="card">
-<div class="rank">🥇 doda（92点）</div>
-<p>幅広い職種に対応しています。</p>
-
-<div class="rank">🥈 リクルートエージェント（90点）</div>
-<p>業界最大級の求人数があります。</p>
-
-<div class="rank">🥉 マイナビエージェント（88点）</div>
-<p>20〜30代の転職支援に強みがあります。</p>
-
-<div class="rank">🏅 type転職エージェント（86点）</div>
-<p>事務職のキャリアアップに特化しています。</p>
-
-<div class="rank">🏅 パソナキャリア（84点）</div>
-<p>事務職の研修・サポート体制が充実しています。</p>
-</div>
-`;
-
+    const disability = document.getElementById("disability").value;
+    const job = document.getElementById("job").value;
+    const age = document.getElementById("age").value;
+    const experience = document.getElementById("experience").value;
+    const salary = document.getElementById("salary").value;
+    const location = document.getElementById("location").value;
+    const companySize = document.getElementById("company-size").value;
+    const reason = document.getElementById("reason").value;
+
+    let result = "";
+    let agents = [];
+
+    // 障害者雇用の場合
+    if(disability === "yes"){
+        agents = [
+            {name: "dodaチャレンジ", score: 96, desc: "障害者雇用に強く、面接対策や定着支援が充実"},
+            {name: "LITALICO仕事ナビ", score: 92, desc: "一人ひとりに合わせた求人紹介が特徴"},
+            {name: "マイナビパートナーズ紹介", score: 89, desc: "長期就業を重視する方におすすめ"},
+            {name: "エージェント・サーナ", score: 87, desc: "障害者専門の老舗エージェント"},
+            {name: "ランスタッド", score: 85, desc: "グローバル企業の求人が豊富"},
+            {name: "atGPエージェント", score: 84, desc: "リモート求人が充実"}
+        ];
+    }else{
+        // 追加の条件に基づくスコア調整
+        let baseAgents = getAgentsByJob(job);
+        agents = adjustScoresByProfile(baseAgents, age, experience, salary, location, companySize, reason);
+    }
+
+    // スコアでソート
+    agents.sort((a, b) => b.score - a.score);
+
+    result = `<div class="card">
+        <h2>📊 診断結果</h2>
+        <p><strong>あなたの条件:</strong> ${getConditionText(disability, job, age, experience, salary, location, companySize, reason)}</p>
+        <hr>
+    `;
+
+    const medals = ["🥇", "🥈", "🥉", "🏅", "🏅"];
+    agents.forEach((agent, index) => {
+        if(index < 5){
+            result += `
+            <div class="rank">${medals[index]} ${agent.name}（${agent.score}点）</div>
+            <p>${agent.desc}</p>
+            `;
+        }
+    });
+
+    result += `</div>
+    <div class="button-group" style="margin-top: 20px;">
+        <button onclick="location.reload()">もう一度診断する</button>
+    </div>`;
+
+    document.getElementById("step8").classList.add("hidden");
+    document.getElementById("result").innerHTML = result;
+    currentStep = 9;
+    updateProgress();
 }
 
+function getAgentsByJob(job){
+    const agents = {
+        office: [
+            {name: "doda", score: 92, desc: "幅広い職種に対応"},
+            {name: "リクルートエージェント", score: 90, desc: "業界最大級の求人数"},
+            {name: "マイナビエージェント", score: 88, desc: "20〜30代の転職支援に強み"},
+            {name: "type転職エージェント", score: 86, desc: "事務職のキャリアアップに特化"},
+            {name: "パソナキャリア", score: 84, desc: "研修・サポート体制が充実"}
+        ],
+        engineer: [
+            {name: "リクルートエージェント", score: 94, desc: "技術職・品質保証の求人が豊富"},
+            {name: "ワークポート", score: 90, desc: "技術系・IT系に強い"},
+            {name: "doda", score: 88, desc: "幅広い求人を扱う"},
+            {name: "JACリクルートメント", score: 86, desc: "ハイキャリア向けの技術職求人"},
+            {name: "Spring転職エージェント", score: 84, desc: "グローバル企業のエンジニア求人"}
+        ],
+        it: [
+            {name: "ワークポート", score: 92, desc: "IT業界に特化、未経験者にも親切"},
+            {name: "リクルートエージェント", score: 90, desc: "IT求人数が業界最大級"},
+            {name: "doda", score: 88, desc: "幅広いIT職種に対応"},
+            {name: "マイナビIT AGENT", score: 86, desc: "20〜30代のIT転職に強み"},
+            {name: "レバテックキャリア", score: 84, desc: "エンジニア特化、高単価案件"}
+        ],
+        sales: [
+            {name: "doda", score: 92, desc: "営業職の求人が豊富"},
+            {name: "リクルートエージェント", score: 90, desc: "営業職向けの大手企業求人"},
+            {name: "hulu", score: 88, desc: "営業系の転職支援に特化"},
+            {name: "type転職エージェント", score: 86, desc: "営業職のキャリアアップに強み"},
+            {name: "JACリクルートメント", score: 84, desc: "高年収営業職の案件が豊富"}
+        ],
+        marketing: [
+            {name: "リクルートエージェント", score: 92, desc: "マーケティング職の大手求人"},
+            {name: "doda", score: 90, desc: "マーケティング職向けの幅広い案件"},
+            {name: "type転職エージェント", score: 88, desc: "マーケティング職のキャリア支援に特化"},
+            {name: "JACリクルートメント", score: 86, desc: "外資系のマーケティング職に強み"},
+            {name: "Spring転職エージェント", score: 84, desc: "グローバル企業のマーケティング求人"}
+        ],
+        design: [
+            {name: "マイナビクリエイター", score: 92, desc: "デザイナー・クリエイター職に特化"},
+            {name: "doda", score: 90, desc: "デザイン職の求人数が豊富"},
+            {name: "リクルートエージェント", score: 88, desc: "大手企業のデザイン職求人"},
+            {name: "レバテッククリエイター", score: 86, desc: "クリエイター向けの高単価案件"},
+            {name: "ウズカレ", score: 84, desc: "未経験からのデザイン職転職"}
+        ],
+        consulting: [
+            {name: "JACリクルートメント", score: 94, desc: "コンサルティングファーム求人に最強"},
+            {name: "リクルートエージェント", score: 91, desc: "大手コンサルティング企業の求人"},
+            {name: "doda", score: 89, desc: "コンサルティング職の幅広い案件"},
+            {name: "Spring転職エージェント", score: 87, desc: "外資系コンサルティングに強み"},
+            {name: "アクシスコンサルティング", score: 85, desc: "コンサルティング業界専門"}
+        ],
+        medical: [
+            {name: "医療ワーカー", score: 93, desc: "医療・福祉業界に特化"},
+            {name: "ナース人材バンク", score: 91, desc: "看護職向けの大手求人"},
+            {name: "リクルートエージェント", score: 88, desc: "医療・福祉職の幅広い求人"},
+            {name: "doda", score: 86, desc: "医療・福祉職向けの多様な案件"},
+            {name: "マイナビコメディカル", score: 84, desc: "リハビリ・検査技師など専門職"}
+        ],
+        construction: [
+            {name: "セコカンNEXT", score: 93, desc: "建設・施工管理職に特化"},
+            {name: "doda", score: 90, desc: "建設業界の求人数が豊富"},
+            {name: "リクルートエージェント", score: 88, desc: "大手建設企業の求人"},
+            {name: "建設・設備求人データベース", score: 86, desc: "施工管理技士向けの専門求人"},
+            {name: "ハタラクティブ", score: 84, desc: "未経験からの建設職就職"}
+        ],
+        hr: [
+            {name: "リクルートエージェント", score: 93, desc: "人事職の大手企業求人"},
+            {name: "doda", score: 91, desc: "人事職の幅広い案件"},
+            {name: "JACリクルートメント", score: 89, desc: "人事部長など経営層向け求人"},
+            {name: "type転職エージェント", score: 87, desc: "人事職のキャリアアップに強み"},
+            {name: "マイナビエージェント", score: 85, desc: "人事職の専門的なサポート"}
+        ],
+        general: [
+            {name: "doda", score: 93, desc: "総務職の幅広い求人"},
+            {name: "リクルートエージェント", score: 91, desc: "総務職の大手企業求人"},
+            {name: "マイナビエージェント", score: 89, desc: "総務職のキャリア支援に特化"},
+            {name: "type転職エージェント", score: 87, desc: "総務職のスキルアップをサポート"},
+            {name: "パソナキャリア", score: 85, desc: "総務職の研修・サポート充実"}
+        ]
+    };
+    return agents[job] || [];
 }
 
-document.getElementById("result").innerHTML=result;
+function adjustScoresByProfile(agents, age, experience, salary, location, companySize, reason){
+    // スコアを複製
+    let adjustedAgents = agents.map(a => ({...a}));
 
+    // 経験年数による調整
+    if(experience === "none"){
+        // 未経験に優しいエージェント
+        if(adjustedAgents.find(a => a.name === "ワークポート")) adjustedAgents.find(a => a.name === "ワークポート").score += 5;
+        if(adjustedAgents.find(a => a.name === "ウズカレ")) adjustedAgents.find(a => a.name === "ウズカレ").score += 5;
+    }
+
+    // 年代による調整
+    if(age === "20s"){
+        adjustedAgents.forEach(a => {
+            if(a.name.includes("マイナビ")) a.score += 3;
+        });
+    }else if(age === "40s" || age === "50s"){
+        adjustedAgents.forEach(a => {
+            if(a.name === "JACリクルートメント") a.score += 5;
+        });
+    }
+
+    // 年収による調整
+    if(salary === "very-high"){
+        adjustedAgents.forEach(a => {
+            if(a.name === "JACリクルートメント") a.score += 5;
+        });
+    }
+
+    // リモート希望による調整
+    if(location === "remote"){
+        adjustedAgents.forEach(a => {
+            if(a.name === "doda" || a.name === "リクルートエージェント") a.score += 3;
+        });
+    }
+
+    // 外資系希望による調整
+    if(companySize === "foreign"){
+        adjustedAgents.forEach(a => {
+            if(a.name === "Spring転職エージェント" || a.name === "JACリクルートメント") a.score += 5;
+        });
+    }
+
+    // ワークライフバランス重視
+    if(reason === "worklife"){
+        adjustedAgents.forEach(a => {
+            if(a.name === "パソナキャリア" || a.name === "doda") a.score += 3;
+        });
+    }
+
+    // スキルアップ重視
+    if(reason === "skill"){
+        adjustedAgents.forEach(a => {
+            if(a.name.includes("レバテック")) a.score += 5;
+        });
+    }
+
+    return adjustedAgents;
 }
+
+function getConditionText(disability, job, age, experience, salary, location, companySize, reason){
+    const jobMap = {
+        office: "事務", engineer: "技術・品質保証", it: "IT", sales: "営業",
+        marketing: "マーケティング", design: "デザイン・クリエイティブ", consulting: "コンサルティング",
+        medical: "医療・福祉", construction: "建設・施工管理", hr: "人事", general: "総務"
+    };
+    const ageMap = {20: "20代", 30: "30代", 40: "40代", 50: "50代以上"};
+    const expMap = {none: "未経験", "1-3": "1-3年", "3-5": "3-5年", "5plus": "5年以上"};
+    const salMap = {low: "300万未満", mid: "300-500万", high: "500-700万", "very-high": "700万以上"};
+    const locMap = {local: "地元", tokyo: "首都圏", national: "全国", remote: "リモート希望"};
+    const comMap = {startup: "スタートアップ", small: "中小企業", large: "大企業", foreign: "外資系"};
+    const reaMap = {skill: "スキルアップ", treatment: "待遇改善", worklife: "ワークライフバランス", career: "キャリアチェンジ"};
+
+    return `障害者雇用:${disability === "yes" ? "希望" : "希望しない"} / 職種:${jobMap[job]} / 年代:${ageMap[age.slice(0,2)]}代 / 経験:${expMap[experience]} / 年収:${salMap[salary]} / 勤務地:${locMap[location]} / 企業規模:${comMap[companySize]} / 転職理由:${reaMap[reason]}`;
+}
+
+updateProgress();
 </script>
 
 </body>
